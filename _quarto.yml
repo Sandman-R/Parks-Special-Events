@@ -6,11 +6,11 @@ execute:
   echo: true
 
 book:
-  title: "YOUR PROJECT TITLE"
+  title: "Parks Special Events"
   author:
-    - AUTHOR1 (UNI1)
-    - AUTHOR2 (UNI2)
-  repo-url: https://github.com/YOUR_GITHUB_ACCOUNT/REPO_NAME
+    - Yihan Hu (yh3919)
+    - Jiachen Qi (jq2426)
+  repo-url: https://github.com/Sandman-R/Parks-Special-Events
   date: today
   page-footer:
     right: |

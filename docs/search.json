@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "YOUR PROJECT TITLE",
+    "title": "Parks Special Events",
     "section": "",
-    "text": "1 Introduction",
+    "text": "1 Introduction\nNew York City has long been a leader in cultural and social trends. In recent years, people around the world have increasingly sought a balance beyond work and income, prioritizing physical and mental well-being. The diverse and varied activities offered in New York City’s parks embody this trend toward relaxation and overall well-being.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
     ]
@@ -14,6 +14,16 @@
     "href": "data.html",
     "title": "2  Data",
     "section": "",
+    "text": "2.0.1 2.1 Unit\nThen we started to search the relavant data source from NYC Open Data and we found Parks Special Events published by Department of Parks and Recreation (DPR). This data set is provided in CSV and updated monthly, but the data may change weekly. Also data is published with a one month delay.\nWe got the data set from https://data.cityofnewyork.us/Recreation/Parks-Special-Events/6v4b-5gp4/about_data.\nThe data set contains 20.8k rows and 13 columns. Its main dimensions include Unit, Date and Time, Borough, LocationType, Location, Event Type, Category, Attendance, Classification, Audience and so on.\nCode\nlibrary(ggplot2)\nlibrary(dplyr)\n\n\n\nAttaching package: 'dplyr'\n\n\nThe following objects are masked from 'package:stats':\n\n    filter, lag\n\n\nThe following objects are masked from 'package:base':\n\n    intersect, setdiff, setequal, union\n\n\nCode\ndf_unit_count &lt;- df |&gt;\n  count(Unit, name=\"unit_count\") |&gt;\n  arrange(unit_count)\n\nggplot(df_unit_count, aes(x=reorder(Unit, unit_count), y=unit_count)) +\n  geom_col(fill = \"#4C9AFF\") +            \n  coord_flip() +                         \n  labs(\n    title = \"Number of Event performed by Unit\",\n    x = \"Event Unit\",\n    y = \"Count\"\n  ) +\n  theme_minimal(base_size = 14)",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data</span>"
+    ]
+  },
+  {
+    "objectID": "data.html#description",
+    "href": "data.html#description",
+    "title": "2  Data",
+    "section": "2.1 Description",
     "text": "2.1 Description",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data</span>"

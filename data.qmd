@@ -1,5 +1,81 @@
 # Data
 
+Then we started to search the relavant data source from `NYC Open Data` and we found `Parks Special Events` published by Department of Parks and Recreation (DPR). This data set is provided in CSV and updated monthly, but the data may change weekly. Also data is published with a one month delay.
+
+We got the data set from <https://data.cityofnewyork.us/Recreation/Parks-Special-Events/6v4b-5gp4/about_data>.
+
+```{r}
+df <- read.csv("Parks_Special_Events_20251027.csv")
+
+head(df)
+```
+
+The data set contains 20.8k rows and 13 columns. Its main dimensions include `Unit`, `Date and Time`, `Borough`, `LocationType`, `Location`, `Event Type`, `Category`, `Attendance`, `Classification`, `Audience` and so on.
+
+### 2.1 Unit
+
+```{r}
+library(ggplot2)
+library(dplyr)
+df_unit_count <- df |>
+  count(Unit, name="unit_count") |>
+  arrange(unit_count)
+
+ggplot(df_unit_count, aes(x=reorder(Unit, unit_count), y=unit_count)) +
+  geom_col(fill = "#4C9AFF") +            
+  coord_flip() +                         
+  labs(
+    title = "Number of Event performed by Unit",
+    x = "Event Unit",
+    y = "Count"
+  ) +
+  theme_minimal(base_size = 14)
+       
+```
+
+### 2.2 Year
+
+```{r}
+library(lubridate)
+library(dplyr)
+
+df_year_count <- df |>
+  mutate(year = year(mdy_hms(Date.and.Time))) |>  
+  count(year, name = "year_count") |>               
+  arrange(year_count)
+
+df_year_count
+```
+
+The 2002 in the table is obviously caused by input misplacement, because the table was established and recorded in 2018. It is unreasonable to record only 2002 and not the more than ten years in between.
+
+```{r}
+df_year_count <- df_year_count |> filter(year != 2002)
+
+ggplot(df_year_count, aes(x=year, y=year_count)) +
+  geom_col(fill = "#4C9AFF") +  
+  labs(title = "Number of Events per Year", x = "Year", y = "Count") +
+  theme_minimal(base_size = 14)
+```
+
+### 2.3 Category
+
+```{r}
+df_cat_count <- df |>
+  count(Category, name="cat_count") |>
+  arrange(cat_count)
+
+ggplot(df_cat_count, aes(x=reorder(Category, cat_count), y=cat_count)) +
+  geom_col(fill = "#4C9AFF") +            
+  coord_flip() +                         
+  labs(
+    title = "Number of Different Events",
+    x = "Category",
+    y = "Count"
+  ) +
+  theme_minimal(base_size = 14)
+```
+
 ## Description
 
 ## Missing value analysis
