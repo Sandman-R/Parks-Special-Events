@@ -1,1 +1,455 @@
 # Results
+
+```{r}
+#| warning: false
+#| message: false
+
+library(dplyr)
+library(ggplot2)
+library(vcd)
+library(stringr)
+library(lubridate)
+library(forcats)
+library(readr)
+library(tidyr)
+library(purrr)
+library(sf)
+library(RColorBrewer)
+library(grid)
+library(ggalluvial)
+
+df <- read.csv("Parks_Special_Events_20251027.csv") 
+parks <- read.csv("Parks_Properties_20251209.csv") 
+parks <- parks |>
+  mutate(
+    geometry = st_as_sfc(multipolygon)
+  ) |>
+  st_as_sf(crs = 4326)
+```
+
+## Preprocessing
+
+```{r}
+#| warning: false
+#| message: false
+
+theme_edav <- function(base_size = 14, base_family = "Helvetica") {
+  theme_minimal(base_size = base_size, base_family = base_family) +
+    theme(
+      panel.grid = element_blank(),
+      axis.line = element_line(color = "black", linewidth = 0.6),
+      axis.title = element_text(face = "bold"),
+      plot.title = element_text(face = "bold", size = base_size + 2),
+      
+      legend.key.height = unit(0.6, "cm"),
+      legend.key.width  = unit(0.6, "cm"),
+      legend.title = element_text(face = "bold"),
+      
+      panel.border = element_blank()
+    )
+}
+
+theme_set(theme_edav())
+
+df <- df |>
+  mutate(
+    datetime = mdy_hms(Date.and.Time),
+    year     = year(datetime),
+    month    = month(datetime, label = TRUE, abbr = TRUE),  
+    dow      = wday(datetime, label = TRUE, abbr = TRUE),    
+    hour     = hour(datetime),
+    doy      = yday(datetime),
+    Attendance_num = parse_number(as.character(Attendance)),
+    Attendance_num = ifelse(Attendance_num < 0, NA, Attendance_num)
+  ) |>
+  filter(year != 2002 & LocationType == "Park") |>
+  mutate(
+    park_clean = Location |>
+      tolower() |>                 # 全转小写
+      str_replace_all("[^a-z0-9 ]", " ") |>  # 去掉标点
+      str_squish()                 # 去掉多余空格
+  )
+
+# Handle with `Audience` 
+audience_types <- df |>
+  mutate(audience_clean = Audience |> 
+           str_replace_all(";#", ",") |> 
+           str_replace_all(";", ",") |>
+           str_replace_all(" ", "") 
+  ) |>
+  mutate(audience_clean = ifelse(
+         is.na(audience_clean) | audience_clean == "",
+         "Unknown",
+         audience_clean
+       )) |>
+  separate_rows(audience_clean, sep = ",") |>
+  mutate(audience_clean = str_trim(audience_clean)) |>
+  filter(audience_clean != "", !is.na(audience_clean)) |>
+  distinct(audience_clean)
+
+audience_types_vec <- audience_types$audience_clean
+
+df <- df |>
+  mutate(audience_clean = Audience |> 
+           str_replace_all(";#", ",") |> 
+           str_replace_all(";", ",") |>
+           str_replace_all(" ", "") |> 
+           str_trim()
+  ) |>
+  mutate(audience_clean = ifelse(
+         is.na(audience_clean) | audience_clean == "",
+         "Unknown",
+         audience_clean
+       ))
+
+# One-Hot Encoding
+dummy_mat <- map_dfc(audience_types_vec, function(tp) {
+  colname <- tp 
+  tibble(
+    !!colname := as.integer(
+      str_detect(df$audience_clean, fixed(tp, ignore_case = TRUE))
+    )
+  )
+})
+
+df <- bind_cols(df, dummy_mat)
+
+head(df)
+```
+
+## Seasonality barplot
+
+```{r}
+#| warning: false
+#| message: false
+events_by_month <- df |>
+  count(month, name = "n") |>
+  arrange(month)
+
+ggplot(events_by_month, aes(x = month, y = n)) +
+  geom_col() +
+  labs(
+    title = "Number of Events by Month",
+    x = "Month",
+    y = "Number of Events"
+  ) +
+  theme_edav()
+
+```
+
+## Tendency linechart
+
+```{r}
+#| warning: false
+#| message: false
+events_by_year <- df |>
+  count(year, name = "n") |>
+  arrange(year)
+
+ggplot(events_by_year, aes(x = year, y = n)) +
+  geom_line() +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(
+    title = "Trend of Number of Events by Year",
+    x = "Year",
+    y = "Number of Events"
+  ) +
+  scale_x_continuous(breaks = unique(events_by_year$year)) +
+  theme_edav()
+```
+
+## multi-line chart
+
+```{r}
+#| warning: false
+#| message: false
+library(forcats)
+
+events_by_year_cat <- df |>
+  count(year, Category, name = "n") |>
+  filter(!is.na(Category))
+
+# 可选：只保留整体上最常见的前 5 类
+top_cats <- df |>
+  count(Category) |>
+  arrange(desc(n)) |>
+  slice_head(n = 5) |>
+  pull(Category)
+
+events_by_year_cat_top <- events_by_year_cat |>
+  filter(Category %in% top_cats)
+
+ggplot(events_by_year_cat_top,
+       aes(x = year, y = n, color = Category)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Number of Events by Year and Category",
+    x = "Year",
+    y = "Number of Events",
+    color = "Category"
+  ) +
+  scale_x_continuous(breaks = sort(unique(events_by_year_cat_top$year))) +
+  theme_edav()
+```
+
+## Borough-level choropleth
+
+```{r}
+#| warning: false
+#| message: false
+library(sf)
+library(tigris)
+
+options(tigris_use_cache = TRUE)
+
+# 1) 获取纽约州县界（县 = Borough 的法律单位）
+ny_counties <- counties(state = "NY", cb = TRUE, year = 2020)
+
+# 2) 只保留 NYC 五个县
+nyc_counties <- ny_counties |>
+  filter(NAME %in% c("New York", "Kings", "Queens", "Bronx", "Richmond")) |>
+  mutate(
+    Borough = dplyr::case_when(
+      NAME == "New York"  ~ "Manhattan",
+      NAME == "Kings"     ~ "Brooklyn",
+      NAME == "Queens"    ~ "Queens",
+      NAME == "Bronx"     ~ "Bronx",
+      NAME == "Richmond"  ~ "Staten Island",
+      TRUE ~ NAME
+    )
+  )
+
+# 3) 统计每个 Borough 的活动数和平均 Attendance
+borough_stats <- df |>
+  group_by(Borough) |>
+  summarise(
+    events = n(),
+    mean_attendance = mean(Attendance_num, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# 4) 合并 shapefile 和 stats
+nyc_map <- nyc_counties |>
+  left_join(borough_stats, by = "Borough")
+
+# 4a) 用活动数量画 Choropleth
+ggplot(nyc_map) +
+  geom_sf(aes(fill = events)) +
+  scale_fill_continuous(na.value = "grey90") +
+  labs(
+    title = "Number of Events by Borough",
+    fill  = "Events"
+  ) +
+  theme_edav()
+```
+
+```{r}
+# 4b) 用平均参与人数画 Choropleth（如果你想看受欢迎程度）
+ggplot(nyc_map) +
+  geom_sf(aes(fill = mean_attendance)) +
+  scale_fill_continuous(na.value = "grey90") +
+  labs(
+    title = "Average Attendance per Event by Borough",
+    fill  = "Avg Attendance"
+  ) +
+  theme_edav()
+```
+
+## Category × Month Heatmap
+
+```{r}
+#| warning: false
+#| message: false
+library(dplyr)
+library(ggplot2)
+
+# 统计每个 (Category, Month) 的事件数量
+cat_month <- df |>
+  filter(!is.na(Category)) |>
+  count(Category, month, name = "n")
+
+# 可选：只保留总体出现次数最多的前 8 个 Category，避免图太乱
+top_cats <- df |>
+  count(Category, sort = TRUE) |>
+  slice_head(n = 8) |>
+  pull(Category)
+
+cat_month <- cat_month |>
+  filter(Category %in% top_cats)
+
+ggplot(cat_month, aes(x = month, y = Category, fill = n)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  labs(
+    title = "Number of Events by Category and Month",
+    x = "Month",
+    y = "Category",
+    fill = "Events"
+  ) +
+  theme_edav()
+```
+
+
+## Calendar Heatmap of Event-type
+
+```{r}
+#| warning: false
+#| message: false
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+
+# 选择一个要画日历的年份
+year_to_plot <- 2019
+
+df_cal <- df |>
+  filter(year == year_to_plot) |>
+  mutate(
+    date = as.Date(datetime),
+    week = isoweek(date),
+    wday = wday(date, label = TRUE, abbr = TRUE, week_start = 1)
+  )
+
+# 每天 × Event.Type 统计活动数
+daily_type <- df_cal |>
+  filter(!is.na(Event.Type)) |>
+  count(Event.Type, date, week, wday, name = "n")
+
+# 只保留出现最多的前 4 个 Event.Type
+top_types <- df |>
+  count(Event.Type, sort = TRUE) |>
+  slice_head(n = 4) |>
+  pull(Event.Type)
+
+daily_type_top <- daily_type |>
+  filter(Event.Type %in% top_types)
+
+ggplot(daily_type_top,
+       aes(x = week, y = wday, fill = n)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "white", high = "darkorange") +
+  facet_wrap(~ Event.Type, ncol = 2) +
+  labs(
+    title = paste("Daily Event Counts by Event.Type in", year_to_plot),
+    x = "ISO Week",
+    y = "Day of Week",
+    fill = "Events"
+  ) +
+  theme_edav()
+```
+
+
+## Attendance Distribution by Borough - Ridge Plot
+
+```{r}
+#| warning: false
+#| message: false
+library(ggridges)
+library(dplyr)
+library(ggplot2)
+
+df_att_boro <- df |>
+  filter(!is.na(Attendance_num), !is.na(Borough)) |>
+  mutate(
+    # 先算一个 99% 分位的阈值
+    att_cap = quantile(Attendance_num, 0.97, na.rm = TRUE),
+    Attendance_capped = pmin(Attendance_num, att_cap)
+  )
+
+ggplot(df_att_boro,
+       aes(x = Attendance_capped,
+           y = Borough,
+           fill = Borough)) +
+  geom_density_ridges(alpha = 0.7, scale = 2, color = "white") +
+  labs(
+    title = "Attendance Distribution by Borough",
+    x = "Attendance (capped at 99th percentile)",
+    y = "Borough"
+  ) +
+  theme_edav()
+```
+
+```{r}
+#| warning: false
+#| message: false
+ggplot(df, aes(x = hour, y = Borough, fill = Borough)) +
+  geom_density_ridges(alpha = 0.7) +
+  labs(title = "Distribution of Event Start Times by Borough",
+       x = "Hour of Day", y = "Borough") +
+  theme_edav()
+```
+
+```{r}
+#| warning: false
+#| message: false
+ggplot(df, aes(x = doy, y = Borough, fill = Borough)) +
+  geom_density_ridges(alpha = 0.7, scale = 1.5) +
+  labs(title = "Seasonal Distribution of Events by Borough",
+       x = "Day of Year", y = "Borough") +
+  theme_edav()
+```
+
+## Parallel Coordinate Plot
+
+```{r}
+#| warning: false
+#| message: false
+library(GGally)
+library(dplyr)
+library(ggplot2)
+
+borough_feat <- df |>
+  filter(!is.na(Borough)) |>
+  group_by(Borough) |>
+  summarise(
+    events          = n(),
+    mean_attendance = mean(Attendance_num, na.rm = TRUE),
+    median_att      = median(Attendance_num, na.rm = TRUE),
+    weekend_prop    = mean(dow %in% c("Sat", "Sun"), na.rm = TRUE),
+    n_categories    = n_distinct(Category),
+    .groups = "drop"
+  )
+
+GGally::ggparcoord(
+  data        = borough_feat,
+  columns     = 2:6,          # 要画的数值列
+  groupColumn = 1,            # Borough 作为颜色分组
+  scale       = "uniminmax",  # 缩放到 [0,1]
+  showPoints  = TRUE,
+  alphaLines  = 0.7
+) +
+  labs(
+    title = "Parallel Coordinate Plot of Borough-level Features",
+    x = "Features",
+    y = "Scaled Value"
+  ) +
+  theme_edav()
+```
+
+## Correlation heatmap of engineered features
+
+```{r}
+#| warning: false
+#| message: false
+library(ggcorrplot)
+library(dplyr)
+
+# 取数值列计算相关系数
+corr_mat <- borough_feat |>
+  select(-Borough) |>
+  cor(use = "pairwise.complete.obs")
+
+ggcorrplot(
+  corr_mat,
+  hc.order = TRUE,        # 层次聚类排序
+  type     = "lower",     # 只画下三角
+  lab      = TRUE,        # 显示相关系数数字
+  lab_size = 3
+) +
+  labs(
+    title = "Correlation Heatmap of Borough-level Features"
+  ) +
+  theme_edav()
+```
