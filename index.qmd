@@ -1,2 +1,6 @@
 # Introduction
-New York City has long been a leader in cultural and social trends. In recent years, people around the world have increasingly sought a balance beyond work and income, prioritizing physical and mental well-being. The diverse and varied activities offered in New York City’s parks embody this trend toward relaxation and overall well-being.
+
+New York City has long been defined by its rhythm — a constant pulse shaped by festivals, community programs, pop-up installations, mobile services and countless small gatherings that animate parks across the five boroughs.
+When the COVID-19 pandemic arrived, this rhythm shifted dramatically. Some event types nearly disappeared, others surged, and attendance patterns changed as residents adapted to restrictions, distancing requirements, and new forms of outdoor activity.
+
+This project explores how the “heartbeat” of NYC’s park events evolved during and after this disruption. By examining temporal cycles, categorical trends and spatial distributions of activity, we trace both the interruption caused by COVID-19 and the gradual return of urban vibrancy. Through ridge plots, alluvial diagrams, hexbin heatmaps, and spatial aggregations, we uncover how different event categories expanded or contracted, how attendance fluctuated across seasons, and how parks across the city absorbed shifting public behaviors. The goal is to understand not only when and where events happened, but also how NYC’s public-space culture adapted and re-emerged as the city recovered.

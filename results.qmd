@@ -73,7 +73,7 @@ df <- df |>
     Attendance_num = parse_number(as.character(Attendance)),
     Attendance_num = ifelse(Attendance_num < 0, NA, Attendance_num)
   ) |>
-  filter(year != 2002 & LocationType == "Park") |>
+  filter(year != 2002 & year != 2017 & LocationType == "Park") |>
   mutate(
     park_clean = Location |>
       tolower() |>                
@@ -261,6 +261,45 @@ ggplot(
     title = "NYC Event Categories by Total Attendance Over Time",
     x     = "Year",
     y     = "Total Attendance"
+  ) +
+  theme_edav()
+```
+
+## Stack Bar
+
+```{r}
+#| warning: false
+#| message: false
+
+
+mobile_df <- df |>
+  filter(Category == "Mobile Unit",
+         !is.na(Classification),
+    str_trim(Classification) != "" )
+
+top_mobile_class <- mobile_df |>
+  count(Classification, sort = TRUE) |>
+  slice_head(n = 10) |>
+  pull(Classification)
+
+mobile_year_class <- mobile_df |>
+  filter(Classification %in% top_mobile_class) |>
+  count(year, Classification, name = "n") |>
+  filter(year >= 2017) |>
+  mutate(
+    year = factor(year),
+    Classification = fct_infreq(Classification)
+  )
+
+ggplot(mobile_year_class,
+       aes(x = year, y = n, fill = Classification)) +
+  geom_col(position = "fill") +
+  scale_fill_brewer(palette = "Set2", name = "Classification") +
+  labs(
+    title = "Mobile Unit Classification Trends Over Time",
+    x     = "Year",
+    y     = "Proportion",
+    fill  = "Classification"
   ) +
   theme_edav()
 ```
