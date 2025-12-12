@@ -1,1 +1,9 @@
 # Conclusion
+
+Our exploration shows that NYC park events exhibit strong seasonal patterns, and the COVID-19 pandemic substantially reshaped how these patterns were expressed over time and space. While event counts recovered in later years, total attendance remained lower than pre-pandemic levels, reflecting a shift toward smaller, more decentralized activities rather than a return to large gatherings. Changes in event composition further suggest structural adaptation, particularly among mobile unit programs, which turned from entertainment-focused uses to more flexible public service roles and did not revert after the pandemic. Spatial analysis reinforces this finding, showing that post-pandemic recovery produced a more distributed pattern of park usage instead of restoring pre-2020 concentration. 
+
+This analysis is limited by estimated attendance values, incomplete classifications during pandemic years, and a focus on public trends rather than individual behavior. 
+
+Future work could incorporate demographic, weather, or other kinds of event data to better explain uneven recovery across categories. 
+
+Overall, the project demonstrates that city rhythms are not fixed but adaptive, and that major disruptions can lead to lasting changes in how public spaces are used.

@@ -183,13 +183,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#preprocessing" id="toc-preprocessing" class="nav-link active" data-scroll-target="#preprocessing"><span class="header-section-number">3.1</span> Preprocessing</a></li>
-  <li><a href="#barplot" id="toc-barplot" class="nav-link" data-scroll-target="#barplot"><span class="header-section-number">3.2</span> Barplot</a></li>
-  <li><a href="#ridge" id="toc-ridge" class="nav-link" data-scroll-target="#ridge"><span class="header-section-number">3.3</span> Ridge</a></li>
-  <li><a href="#hex-heatmap" id="toc-hex-heatmap" class="nav-link" data-scroll-target="#hex-heatmap"><span class="header-section-number">3.4</span> Hex Heatmap</a></li>
-  <li><a href="#alluvial-1" id="toc-alluvial-1" class="nav-link" data-scroll-target="#alluvial-1"><span class="header-section-number">3.5</span> Alluvial 1</a></li>
-  <li><a href="#alluvial-2" id="toc-alluvial-2" class="nav-link" data-scroll-target="#alluvial-2"><span class="header-section-number">3.6</span> Alluvial 2</a></li>
-  <li><a href="#stack-bar" id="toc-stack-bar" class="nav-link" data-scroll-target="#stack-bar"><span class="header-section-number">3.7</span> Stack Bar</a></li>
-  <li><a href="#spatial" id="toc-spatial" class="nav-link" data-scroll-target="#spatial"><span class="header-section-number">3.8</span> Spatial</a></li>
+  <li><a href="#seasonal-patterns" id="toc-seasonal-patterns" class="nav-link" data-scroll-target="#seasonal-patterns"><span class="header-section-number">3.2</span> Seasonal Patterns</a></li>
+  <li><a href="#impact-of-pandemic" id="toc-impact-of-pandemic" class="nav-link" data-scroll-target="#impact-of-pandemic"><span class="header-section-number">3.3</span> Impact of Pandemic</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Sandman-R/Parks-Special-Events/edit/main/results.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Sandman-R/Parks-Special-Events/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -298,8 +293,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 </section>
-<section id="barplot" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="barplot"><span class="header-section-number">3.2</span> Barplot</h2>
+<section id="seasonal-patterns" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="seasonal-patterns"><span class="header-section-number">3.2</span> Seasonal Patterns</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -317,17 +312,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_edav</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="results_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-monthly-events" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-monthly-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="results_files/figure-html/fig-monthly-events-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-monthly-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.1: Monthly Number of Events
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>From the bar chart we can clearly see the seasonal pattern of the number of events held in NYC parks. The events are heavily concentrated in late spring and summer, peaking between June and August, Droping sharply during winter. It hightlights the strong dependence of oourdoor public activities on weather and daylight.</p>
-</section>
-<section id="ridge" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="ridge"><span class="header-section-number">3.3</span> Ridge</h2>
+<p>From <a href="#fig-monthly-events" class="quarto-xref">Figure&nbsp;<span>3.1</span></a> we can clearly see the seasonal pattern of the number of events held in NYC parks. The events are heavily concentrated in late spring and summer, peaking between June and August, Droping sharply during winter. It hightlights the strong dependence of oourdoor public activities on weather and daylight.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -349,17 +346,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_edav</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="results_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-seasonal-categories" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-seasonal-categories-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="results_files/figure-html/fig-seasonal-categories-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-seasonal-categories-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.2: Seasonal Distribution for categories
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Then we use ridge plot to decompose the overall seasonal pattern into categories. Fitness, sport and KIM related programs show sharply peaked distributions centered around the mid of the year, showing the preference on summer conditions. In contrast, arts and culture as well as family festival events exhibit broader spreads, suggesting greater flexibility. These patterns suggest that the seasonal rhythm of park usage is not uniform, but is structured by the functional nature of events.</p>
-</section>
-<section id="hex-heatmap" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="hex-heatmap"><span class="header-section-number">3.4</span> Hex Heatmap</h2>
+<p>Then we use ridge plot to decompose the overall seasonal pattern into categories. We can see from <a href="#fig-seasonal-categories" class="quarto-xref">Figure&nbsp;<span>3.2</span></a> that fitness, sport and KIM related programs show sharply peaked distributions centered around the mid of the year, showing the preference on summer conditions. In contrast, arts and culture as well as family festival events exhibit broader spreads, suggesting greater flexibility. These patterns suggest that the seasonal rhythm of park usage is not uniform, but is structured by the functional nature of events.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -388,18 +387,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="results_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-hex-attendance-over-the-year" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hex-attendance-over-the-year-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="results_files/figure-html/fig-hex-attendance-over-the-year-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hex-attendance-over-the-year-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.3: Hex map for Attendance &amp; Day of year
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>The hexbin heatmap of attendance versus day-of-year shows that the seasonal increase in park activity is driven primarily by a large number of small- to mid-sized events. The highest concentration of events occurs during the summer months with attendance levels between approximately 5 and 20 participants. In contrast, high-attendance events are relatively rare and distributed sparsely across the year.</p>
+<p>The hexbin heatmap of attendance versus day-of-year(<a href="#fig-hex-attendance-over-the-year" class="quarto-xref">Figure&nbsp;<span>3.3</span></a>) shows that the seasonal increase in park activity is driven primarily by a large number of small- to mid-sized events. The highest concentration of events occurs during the summer months with attendance levels between approximately 5 and 20 participants. In contrast, high-attendance events are relatively rare and distributed sparsely across the year.</p>
 <p>This pattern suggests that peak park usage reflects frequent, lower-density gatherings rather than occasional large-scale events, highlighting the role of parks as flexible spaces for decentralized public activity.</p>
 </section>
-<section id="alluvial-1" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="alluvial-1"><span class="header-section-number">3.5</span> Alluvial 1</h2>
+<section id="impact-of-pandemic" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="impact-of-pandemic"><span class="header-section-number">3.3</span> Impact of Pandemic</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -455,17 +459,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_edav</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="results_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-all-cat" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-all-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="results_files/figure-html/fig-all-cat-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-all-cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.4: NYC number of events(different categories) over years
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>The alluvial diagram of event counts shows a sharp contraction across nearly all categories in 2020, reflecting the immediate impact of COVID-19 restrictions. Surprisingly, the number of events in 2020 is rather high compared to the other years. In subsequent years, recovery occurs unevenly across categories. Mobile unitprograms rebound more quickly, while arts, culture, and family-oriented events recover more gradually.</p>
-</section>
-<section id="alluvial-2" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="alluvial-2"><span class="header-section-number">3.6</span> Alluvial 2</h2>
+<p>Base on our common knowledge, activities should be effected greatly during the pandemic. But surprisingly, we can see from <a href="#fig-all-cat" class="quarto-xref">Figure&nbsp;<span>3.4</span></a> that with the immediate impact of COVID-19 restrictions, the number of events in 2020 is higher compared to the other years. Looking at the poportion over different categories, there’s a huge decrease on the number of Mobile Unit-related events.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -521,17 +527,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_edav</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="results_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-all-att" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-all-att-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="results_files/figure-html/fig-all-att-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-all-att-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.5: NYC attendence for events(different categories) over years
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>To study the strange pattern in the first alluvial graph, we plot the total attendance instead of number of events. When examining total attendance, a different recovery pattern emerges. While event counts is high during pandemics, total attendance is obviously lower than in any other years, particularly for mobile unit and family festival programs. This indicates that those events happened during pandemics is mostly made up of small scale events.</p>
-</section>
-<section id="stack-bar" class="level2" data-number="3.7">
-<h2 data-number="3.7" class="anchored" data-anchor-id="stack-bar"><span class="header-section-number">3.7</span> Stack Bar</h2>
+<p>To study the strange pattern in the first alluvial graph, we plot the total attendance instead of number of events(shown in <a href="#fig-all-att" class="quarto-xref">Figure&nbsp;<span>3.5</span></a>). When examining total attendance, a different recovery pattern emerges. While event counts is high during pandemics, total attendance is obviously lower than in any other years, particularly for mobile unit and family festival programs. This indicates that those events happened during pandemics is mostly made up of small scale events.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -567,19 +575,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_edav</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="results_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-stack-classification" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stack-classification-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="results_files/figure-html/fig-stack-classification-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stack-classification-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.6: Stack Bar Chart showing propotion of classifications for Mobile Unit over time
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Since mobile unit is a very important category of the events, and the category name itself doesn’t represent the function, we dive deeper into the detailed calssification to see the patterns.</p>
-<p>From the stacked bar chart above, we can see the proportional composition of mobile unit classifications shows a clear structural shift over time. Prior to the pandemic, mobile units were dominated by movie-related programming, reflecting their role as mobile entertainment platforms. In 2020, this structure collapses into a single, pandemic-specific classification, indicating an emergency-driven reorganization rather than gradual change.</p>
+<p>From <a href="#fig-stack-classification" class="quarto-xref">Figure&nbsp;<span>3.6</span></a>, we can see the proportional composition of mobile unit classifications shows a clear structural shift over time. Prior to the pandemic, mobile units were dominated by movie-related programming, reflecting their role as mobile entertainment platforms. In 2020, this structure collapses into a single, pandemic-specific classification, indicating an emergency-driven reorganization rather than gradual change.</p>
 <p>In the post-pandemic period, mobile units increasingly shift toward M.U.T.S, play, and fitness-related functions. This new composition stabilizes after 2022 and does not return to pre-pandemic patterns, suggesting that mobile units evolved from cultural entertainment vehicles into flexible public service infrastructure.</p>
-</section>
-<section id="spatial" class="level2" data-number="3.8">
-<h2 data-number="3.8" class="anchored" data-anchor-id="spatial"><span class="header-section-number">3.8</span> Spatial</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -671,14 +681,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>(p2019 <span class="sc">+</span> p2020) <span class="sc">/</span> (p2021 <span class="sc">+</span> p2022)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="results_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-map" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="results_files/figure-html/fig-map-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.7: Spatial patterns on different years
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Spatial patterns of attendance shows a clear transformation over time. In 2019, park event participation was highly concentrated in a small number of central locations, reflecting a centralized pattern of public gathering. In 2020, attendance levels dropped sharply and spatial hotspots largely disappeared, resulting in a more uniform distribution across the city.</p>
+<p><a href="#fig-map" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> shows a clear transformation over time. In 2019, park event participation was highly concentrated in a small number of central locations, reflecting a centralized pattern of public gathering. In 2020, attendance levels dropped sharply and spatial hotspots largely disappeared, resulting in a more uniform distribution across the city.</p>
 <p>In 2021 and 2022, attendance gradually recovered, with high-attendance areas re-emerging. However, these hotspots were more spatially distributed than in 2019, suggesting a shift toward a more decentralized pattern of park usage.</p>
 
 
